@@ -4,8 +4,6 @@ source 'https://rubygems.org'
 
 gem 'myst', path: '/opt/ernest-libraries/myst/', platform: :jruby
 
-gem 'sinatra'
-
 group :development, :test do
   gem 'pry'
 end
