@@ -22,10 +22,10 @@ describe 'vcloud_instance_updater_microservice' do
         cpus: '2',
         ram: '512',
         ip: '10.0.0.10',
-        disks: []
+        disks: [],
         network_name: 'network',
         reference_image: 'centos65-tty-sudo-disabled',
-        reference_catalog: 'images',
+        reference_catalog: 'images'
       }
     end
     let!(:datacenter) { double('datacenter', private_network: true, compute_instance: instance) }
