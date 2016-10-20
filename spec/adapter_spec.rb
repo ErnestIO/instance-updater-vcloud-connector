@@ -14,21 +14,19 @@ describe 'vcloud_instance_updater_microservice' do
 
   describe '#update_instance' do
     let!(:data)   do
-      { instance_type: 'vcloud',
-        router_name: 'adria-vse',
-        client_name: 'r3labs-development',
+      {
         datacenter_name: 'r3-acidre',
         datacenter_username: 'acidre@r3labs-development',
         datacenter_password: 'ed7d0a9ffed74b2d3bc88198cbe7948c',
+        name: 'instance',
+        cpus: '2',
+        ram: '512',
+        ip: '10.0.0.10',
+        disks: []
         network_name: 'network',
-        instance_rules: [],
-        instance_name: 'instance',
-        instance_resource: { reference_image: 'centos65-tty-sudo-disabled',
-                             reference_catalog: 'images',
-                             cpus: '2',
-                             ram: '512',
-                             ip: '10.0.0.10',
-                             disks: [] } }
+        reference_image: 'centos65-tty-sudo-disabled',
+        reference_catalog: 'images',
+      }
     end
     let!(:datacenter) { double('datacenter', private_network: true, compute_instance: instance) }
     let!(:vapp)       { double('vapp', isDeployed: true) }
