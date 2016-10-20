@@ -12,7 +12,7 @@ include Myst::Providers::VCloud
 
 def update_instance(data)
   values = data.values_at(:datacenter_name, :client_name, :router_name, :network_name).compact
-  return false unless data[:instance_type] == 'vcloud' && values.length == 4
+  return false unless values.length == 4
 
   credentials = data[:datacenter_username].split('@')
   provider = Provider.new(endpoint:     data[:vcloud_url],
@@ -20,29 +20,29 @@ def update_instance(data)
                           username:     credentials.first,
                           password:     data[:datacenter_password])
   datacenter  = provider.datacenter(data[:datacenter_name])
-  instance    = datacenter.compute_instance(data[:instance_name])
+  instance    = datacenter.compute_instance(data[:name])
   instance.tasks.each { |task| task.waitForTask(0, 1000) }
 
   instance.power_off if instance.vapp.isDeployed
 
-  instance.hostname = data[:instance_name]
-  instance.cpus = data[:instance_resource][:cpus]
-  instance.memory  = data[:instance_resource][:ram]
+  instance.hostname = data[:name]
+  instance.cpus = data[:cpus]
+  instance.memory  = data[:ram]
 
   if instance.nics.count == 0
     network_interace = NetworkInterface.new(client:     client,
                                             id:         0,
                                             network:    data[:network_name],
-                                            ipaddress:  data[:instance_resource][:ip],
+                                            ipaddress:  data[:ip],
                                             primary:    true)
     instance.add_nic(network_interace)
   end
   instance.tasks.each { |task| task.waitForTask(0, 1000) }
 
-  if data[:instance_resource][:disks]
+  if data[:disks]
     existing_disks = instance.disks.select(&:isHardDisk)
 
-    data[:instance_resource][:disks].each do |disk|
+    data[:disks].each do |disk|
       if existing_disks[disk[:id]].nil?
         dsk = AttachedStorage.new(client: client, id: disk[:id], size: disk[:size])
         instance.add_disk(dsk)
