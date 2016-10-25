@@ -43,6 +43,9 @@ def update_instance(data)
       if existing_disks[disk[:id]].nil?
         dsk = AttachedStorage.new(client: client, id: disk[:id], size: disk[:size])
         instance.add_disk(dsk)
+      elsif existing_disks[disk[:id]].getHardDiskSize < disk[:size]
+        existing_disks[disk[:id]].updateHardDiskSize(disk[:size])
+        instance.vm.updateDisks(instance.vm.getDisks).waitForTask(0, 1000)
       end
     end
   end
