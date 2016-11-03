@@ -22,7 +22,7 @@ def update_instance(data)
 
   instance.power_off if instance.vapp.isDeployed
 
-  instance.hostname = data[:name]
+  instance.hostname = data[:hostname]
   instance.cpus = data[:cpus]
   instance.memory  = data[:ram]
 
