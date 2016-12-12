@@ -11,11 +11,13 @@ require 'myst'
 include Myst::Providers::VCloud
 
 def update_instance(data)
-  credentials = data[:datacenter_username].split('@')
+  usr = ENV['DT_USR'] || data[:datacenter_username]
+  pwd = ENV['DT_PWD'] || data[:datacenter_password]
+  credentials = usr.split('@')
   provider = Provider.new(endpoint:     data[:vcloud_url],
                           organisation: credentials.last,
                           username:     credentials.first,
-                          password:     data[:datacenter_password])
+                          password:     pwd)
   datacenter  = provider.datacenter(data[:datacenter_name])
   instance    = datacenter.compute_instance(data[:name])
   instance.tasks.each { |task| task.waitForTask(0, 1000) }
