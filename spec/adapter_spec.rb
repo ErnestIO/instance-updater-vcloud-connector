@@ -13,7 +13,7 @@ describe 'vcloud_instance_updater_microservice' do
   end
 
   describe '#update_instance' do
-    let!(:data)   do
+    let!(:data) do
       {
         datacenter_name: 'r3-acidre',
         datacenter_username: 'acidre@r3labs-development',

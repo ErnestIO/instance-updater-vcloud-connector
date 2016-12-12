@@ -26,7 +26,7 @@ def update_instance(data)
 
   instance.hostname = data[:hostname]
   instance.cpus = data[:cpus]
-  instance.memory  = data[:ram]
+  instance.memory = data[:ram]
 
   if instance.nics.count == 0
     network_interace = NetworkInterface.new(client:     client,
@@ -63,7 +63,7 @@ rescue => e
 end
 
 unless defined? @@test
-  @data       = { id: SecureRandom.uuid, type: ARGV[0] }
+  @data = { id: SecureRandom.uuid, type: ARGV[0] }
   @data.merge! JSON.parse(ARGV[1], symbolize_names: true)
 
   original_stdout = $stdout
