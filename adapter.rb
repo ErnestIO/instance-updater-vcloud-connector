@@ -11,11 +11,13 @@ require 'myst'
 include Myst::Providers::VCloud
 
 def update_instance(data)
-  credentials = data[:datacenter_username].split('@')
+  usr = ENV['DT_USR'] || data[:datacenter_username]
+  pwd = ENV['DT_PWD'] || data[:datacenter_password]
+  credentials = usr.split('@')
   provider = Provider.new(endpoint:     data[:vcloud_url],
                           organisation: credentials.last,
                           username:     credentials.first,
-                          password:     data[:datacenter_password])
+                          password:     pwd)
   datacenter  = provider.datacenter(data[:datacenter_name])
   instance    = datacenter.compute_instance(data[:name])
   instance.tasks.each { |task| task.waitForTask(0, 1000) }
@@ -24,7 +26,7 @@ def update_instance(data)
 
   instance.hostname = data[:hostname]
   instance.cpus = data[:cpus]
-  instance.memory  = data[:ram]
+  instance.memory = data[:ram]
 
   if instance.nics.count == 0
     network_interace = NetworkInterface.new(client:     client,
@@ -61,7 +63,7 @@ rescue => e
 end
 
 unless defined? @@test
-  @data       = { id: SecureRandom.uuid, type: ARGV[0] }
+  @data = { id: SecureRandom.uuid, type: ARGV[0] }
   @data.merge! JSON.parse(ARGV[1], symbolize_names: true)
 
   original_stdout = $stdout

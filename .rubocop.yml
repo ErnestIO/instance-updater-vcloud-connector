@@ -11,7 +11,7 @@ Documentation:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 40
+  Max: 60
 
 Metrics/CyclomaticComplexity:
   Enabled: false
